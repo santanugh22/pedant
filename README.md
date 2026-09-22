@@ -10,7 +10,7 @@
 [![Jest](https://img.shields.io/badge/Jest-Unit_%26_Concurrency_Tests-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
 [![Razorpay](https://img.shields.io/badge/Razorpay-Payment_Gateway-0C2340?style=for-the-badge&logo=razorpay&logoColor=00BAF2)](https://razorpay.com/)
 
-A production-grade, pixel-perfect full-stack implementation of the **Feedants Classical Dance Competition Details Screen** and accompanying mobile ecosystem. Engineered from the ground up according to the technical assignment specification (`Feedants_Full_Stack_Development_Internship_Technical_Assignment.pdf`) and the high-fidelity design reference (`Design_Reference.png`).
+A production-grade, pixel-perfect full-stack talent competition platform and mobile ecosystem. Engineered from the ground up featuring high-concurrency ticket/spot bookings with zero-overbooking guarantees, real-time lifecycle state machines, multi-language i18n support, and interactive Razorpay checkout.
 
 ---
 
@@ -18,19 +18,19 @@ A production-grade, pixel-perfect full-stack implementation of the **Feedants Cl
 
 > All screens below are captured live from the running Expo application, backed by the Node.js TypeScript API and MongoDB database.
 
-### 1. The Core Assignment: Competition Details Screen (Objective Reference)
-The focal point of the assignment, featuring the exact visual hierarchy, typography, colors, dynamic countdown timers, expandable rules, and server-driven sticky CTA matching `Design_Reference.png`.
+### 1. Flagship Screen: Competition Details & Battle Arena
+The primary competition battle experience, featuring rich visual hierarchy, curated typography, dynamic countdown timers, expandable rules, and a server-driven sticky CTA.
 
 <table align="center" width="100%">
   <tr>
-    <th align="center" width="50%">English Default View (Objective Page Match)</th>
+    <th align="center" width="50%">English Default View</th>
     <th align="center" width="50%">हिंदी Localization (1-Tap i18n Switch)</th>
   </tr>
   <tr>
     <td align="center" valign="top">
       <img src="./previews/competitions-view-top.png" alt="Competition Details English" width="340" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"/>
       <br/>
-      <sub><b>✓ Exact Design Match</b>: Judge card with video modal, structured 2-row countdown timer, 2×2 dates grid, and "Register Now" CTA</sub>
+      <sub><b>✓ High-Fidelity UI</b>: Judge card with video modal, structured 2-row countdown timer, 2×2 dates grid, and "Register Now" CTA</sub>
     </td>
     <td align="center" valign="top">
       <img src="./previews/competitions-view-top-hindi.png" alt="Competition Details Hindi" width="340" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);"/>
@@ -164,7 +164,7 @@ Organizers can configure full talent battles with timeline presets, automated pr
 
 ## ⚡ Quick Start (Zero External Dependencies)
 
-This project is configured with an **automatic in-memory MongoDB replica set fallback** (`MongoMemoryReplSet`) and **in-memory Redis fallback**. You do not need to install or configure external database servers or AWS credentials to run and evaluate the application immediately!
+This project is configured with an **automatic in-memory MongoDB replica set fallback** (`MongoMemoryReplSet`) and **in-memory Redis fallback**. You do not need to install or configure external database servers or AWS credentials to run and test the application immediately!
 
 ### 1. Prerequisites
 - **Node.js**: v20+ LTS or v22/v24 LTS
@@ -192,11 +192,11 @@ npx expo start    # Press 'w' for Web, or scan QR code with Expo Go on iOS / And
 
 ## 👥 Seeded Demo Accounts & User States
 
-The seed script creates distinct accounts allowing you to immediately evaluate different lifecycle states:
+The seed script creates distinct accounts allowing you to immediately explore and test different lifecycle states:
 
 | Account Type | Email | Password | Pre-seeded Status & Expected UI Behavior |
 |---|---|---|---|
-| **Registered Participant** | `registered@feedants.com` | `password123` | **Confirmed & Paid** for "Feedants Classical Dance". Displays the **✓ Registered** badge and the **Upload Submission** CTA matching the design reference! |
+| **Registered Participant** | `registered@feedants.com` | `password123` | **Confirmed & Paid** for "Feedants Classical Dance". Displays the **✓ Registered** badge and the **Upload Submission** CTA! |
 | **Fresh / New User** | `demo@feedants.com` | `password123` | **Unregistered**. Displays the **Register Now – ₹99** CTA. Tap to test spot reservation and the Razorpay payment checkout flow from scratch. |
 | **Guest (Signed Out)** | *None* | *None* | Public view. No "Registered" badge. Tapping "Register Now" redirects to login and returns automatically upon authentication. |
 
@@ -283,7 +283,7 @@ Spots are reserved atomically at the start of checkout (`pending_payment`) with 
 ### 2. Server-Driven CTA State Machine
 The sticky bottom button logic is computed purely on the backend (`computeUserCta`) and delivered to the client as data:
 - Prevents divergence between client and server business logic.
-- Accommodates all 12 rows of the assignment lifecycle decision matrix (Unregistered, Registered, Spots Full, Registration Closed, Submission Open/Closed, Results Declared).
+- Accommodates all 12 states of the competition lifecycle decision matrix (Unregistered, Registered, Spots Full, Registration Closed, Submission Open/Closed, Results Declared).
 - Formally verified with 14 unit test cases in `backend/tests/unit/lifecycleService.test.ts`.
 
 ### 3. Safe-Area Responsive Modal System
@@ -293,7 +293,7 @@ The sticky bottom button logic is computed purely on the backend (`computeUserCt
 
 ### 4. Direct-to-Storage Architecture with S3/Local Switch
 - Configured with switchable storage drivers (`UPLOAD_PROVIDER=local` vs `UPLOAD_PROVIDER=s3`).
-- Defaults to `local` for effortless offline evaluation without AWS credentials.
+- Defaults to `local` for effortless local development and testing without AWS credentials.
 - Set `UPLOAD_PROVIDER=s3` in production for direct pre-signed URL uploads that bypass the Node.js API server entirely.
 
 ### 5. Client Clock Drift Elimination
@@ -307,10 +307,10 @@ The sticky bottom button logic is computed purely on the backend (`computeUserCt
 | Decision | Chosen Approach | Alternative Considered | Trade-off Rationale |
 |---|---|---|---|
 | **Spot Booking Model** | Reserve spot at checkout start with 15-min hold TTL | Decrement spot only upon confirmed payment | The chosen reservation model prevents collecting money from two users for one spot (avoiding awkward refunds), in exchange for brief spot hold unavailability if a checkout is abandoned. |
-| **Razorpay Integration** | Standard Checkout inside safe-area Modal | Native `react-native-razorpay` SDK | Modal checkout works seamlessly in plain Expo Go and web without native prebuild steps (`npx expo prebuild`), prioritizing friction-free evaluator onboarding. |
+| **Razorpay Integration** | Standard Checkout inside safe-area Modal | Native `react-native-razorpay` SDK | Modal checkout works seamlessly in plain Expo Go and web without native prebuild steps (`npx expo prebuild`), prioritizing universal cross-platform support and zero-friction developer onboarding. |
 | **State Computation** | Centralized on backend, delivered as data | Derived independently in React Native components | Centralized calculation eliminates client/server logic drift and keeps the mobile app lightweight. |
 | **Live Updates** | React Query background polling (20s) + refetch on focus | Full WebSocket / Socket.io live socket | Background polling and refetch-on-focus satisfy real-time spots consistency without the connection overhead and firewall issues of standing WebSockets. |
-| **Media Storage** | Switchable driver (`UPLOAD_PROVIDER=local` vs `s3`) | S3-only requirement | Allows evaluators to test full video/image uploads without providing AWS access keys, while keeping production S3 code ready via configuration. |
+| **Media Storage** | Switchable driver (`UPLOAD_PROVIDER=local` vs `s3`) | S3-only requirement | Allows developers and users to test full video/image uploads locally without providing AWS access keys, while keeping production S3 code ready via configuration. |
 
 ---
 
@@ -332,7 +332,7 @@ feedants-competition/
 │   ├── home-landing.png                # Home screen dashboard with Platform Pulse
 │   ├── explore-landing.png             # Discovery hub with search, chips, and reels
 │   ├── competitions-landing.png        # Competitions list with status badges
-│   ├── competitions-view-top.png       # Objective page match (Classical Dance)
+│   ├── competitions-view-top.png       # Competition battle details (Classical Dance)
 │   ├── competitions-view-top-hindi.png # Hindi localization showcase
 │   ├── competitions-view-judgingparam.png # Judging criteria breakdown
 │   ├── competitions-view-rules.png     # Rules & eligibility guidelines
@@ -403,5 +403,5 @@ EXPO_PUBLIC_WEB_BASE_URL=https://feedants.com
 
 <p align="center">
   <b>Engineered with ❤️ for Feedants</b><br/>
-  <sub>Full-Stack Development Technical Assignment Submission</sub>
+  <sub>Full-Stack Talent & Classical Arts Competition Ecosystem</sub>
 </p>
