@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   RefreshControl,
   Alert,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCompetition, useRegister, useVerifyPayment } from '../../../../src/hooks/useCompetition';
 import { useAuthStore } from '../../../../src/store/authStore';
