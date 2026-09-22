@@ -3,12 +3,22 @@ import { env } from './config/env';
 import { connectDatabase, disconnectDatabase } from './config/db';
 import { logger } from './config/logger';
 import { startExpirySweepJob, stopExpirySweepJob } from './jobs/expirySweep';
+import { Competition } from './models/Competition';
+import { seedDatabase } from './seed';
 
 async function bootstrap() {
   try {
     // 1. Connect to MongoDB (with replica set support)
     const dbUri = await connectDatabase();
     logger.info(`Database connected: ${dbUri}`);
+
+    // Auto-seed if database is empty (e.g. freshly started embedded MongoMemoryReplSet)
+    const competitionCount = await Competition.countDocuments();
+    if (competitionCount === 0) {
+      logger.info('Fresh database detected (0 competitions found). Auto-seeding catalog & demo accounts...');
+      await seedDatabase({ isLarge: true, clean: true });
+      logger.info('Auto-seeding complete! Competitions and demo accounts are ready.');
+    }
 
     // 2. Start background scheduled jobs
     startExpirySweepJob();

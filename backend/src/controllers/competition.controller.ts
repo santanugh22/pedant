@@ -6,15 +6,30 @@ import { Registration } from '../models/Registration';
 import mongoose from 'mongoose';
 
 export const listCompetitions = catchAsync(async (req: Request, res: Response) => {
-  const { category, page, limit } = req.query as any;
+  const { category, search, status, sortBy, page, limit } = req.query as any;
   const userId = req.user?.userId;
   const result = await CompetitionService.listCompetitions(
-    category as string | undefined,
-    page ? parseInt(page as string, 10) : 1,
-    limit ? parseInt(limit as string, 10) : 10,
+    {
+      category: category as string | undefined,
+      search: search as string | undefined,
+      status: status as any,
+      sortBy: sortBy as any,
+      page: page ? parseInt(page as string, 10) : 1,
+      limit: limit ? parseInt(limit as string, 10) : 10,
+    },
     userId
   );
   return sendSuccess(res, result.competitions, 200, result.pagination);
+});
+
+export const getOverviewStats = catchAsync(async (req: Request, res: Response) => {
+  const result = await CompetitionService.getOverviewStats();
+  return sendSuccess(res, result, 200);
+});
+
+export const createCompetition = catchAsync(async (req: Request, res: Response) => {
+  const result = await CompetitionService.createCompetition(req.body);
+  return sendSuccess(res, result, 201);
 });
 
 export const getCompetition = catchAsync(async (req: Request, res: Response) => {

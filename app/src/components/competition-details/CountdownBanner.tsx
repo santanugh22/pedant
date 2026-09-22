@@ -19,25 +19,46 @@ export const CountdownBanner: React.FC<CountdownBannerProps> = ({
   onExpired,
 }) => {
   const { t } = useTranslation();
-  const { formatted, isExpired } = useCountdown(targetIso, serverTimeIso, onExpired);
+  const { days, hours, minutes, seconds, isExpired } = useCountdown(targetIso, serverTimeIso, onExpired);
 
   if (!visible || isExpired) return null;
 
   return (
     <View style={styles.banner}>
-      {/* Left: Hourglass + Registration Closes In */}
-      <View style={styles.leftSection}>
-        <Ionicons name="hourglass-outline" size={17} color={colors.primary} style={styles.icon} />
-        <Text style={styles.labelText}>{t('registrationClosesIn')}</Text>
+      {/* Top Row: Label & Hurry Up Badge */}
+      <View style={styles.headerRow}>
+        <View style={styles.leftSection}>
+          <Ionicons name="hourglass-outline" size={15} color={colors.primary} style={styles.icon} />
+          <Text style={styles.labelText}>{t('registrationClosesIn')}</Text>
+        </View>
+
+        <View style={styles.rightSection}>
+          <MaterialCommunityIcons name="timer-sand" size={14} color={colors.primary} style={styles.icon} />
+          <Text style={styles.hurryUpText}>{t('hurryUp')}</Text>
+        </View>
       </View>
 
-      {/* Center: Dynamic Countdown */}
-      <Text style={styles.timerText}>{formatted}</Text>
-
-      {/* Right: Stopwatch + Hurry Up! */}
-      <View style={styles.rightSection}>
-        <MaterialCommunityIcons name="timer-sand" size={16} color={colors.primary} style={styles.icon} />
-        <Text style={styles.hurryUpText}>{t('hurryUp')}</Text>
+      {/* Bottom Row: Centered, High-Legibility Timer Badges */}
+      <View style={styles.timerContainer}>
+        <View style={styles.timerUnit}>
+          <Text style={styles.timerDigit}>{days}</Text>
+          <Text style={styles.timerUnitLabel}>d</Text>
+        </View>
+        <Text style={styles.separator}>:</Text>
+        <View style={styles.timerUnit}>
+          <Text style={styles.timerDigit}>{hours}</Text>
+          <Text style={styles.timerUnitLabel}>h</Text>
+        </View>
+        <Text style={styles.separator}>:</Text>
+        <View style={styles.timerUnit}>
+          <Text style={styles.timerDigit}>{minutes}</Text>
+          <Text style={styles.timerUnitLabel}>m</Text>
+        </View>
+        <Text style={styles.separator}>:</Text>
+        <View style={styles.timerUnit}>
+          <Text style={styles.timerDigit}>{seconds}</Text>
+          <Text style={styles.timerUnitLabel}>s</Text>
+        </View>
       </View>
     </View>
   );
@@ -45,46 +66,80 @@ export const CountdownBanner: React.FC<CountdownBannerProps> = ({
 
 const styles = StyleSheet.create({
   banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: colors.primaryTint,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.sm + 2,
     marginBottom: spacing.md,
     borderWidth: 1,
     borderColor: '#D4EBE7',
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
   },
   rightSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    flex: 1,
+    backgroundColor: '#D9ECE8',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: radius.pill,
   },
   icon: {
     marginRight: 4,
   },
   labelText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
     color: colors.textPrimary,
   },
-  timerText: {
+  hurryUpText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    borderColor: '#D4EBE7',
+    alignSelf: 'center',
+    minWidth: 220,
+  },
+  timerUnit: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  timerDigit: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.primary,
+    fontVariant: ['tabular-nums'],
+  },
+  timerUnitLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginLeft: 2,
+    marginRight: 4,
+  },
+  separator: {
     fontSize: 14,
     fontWeight: '700',
     color: colors.primary,
-    letterSpacing: 0.5,
-    paddingHorizontal: spacing.xs,
-  },
-  hurryUpText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: colors.primary,
+    marginHorizontal: 4,
+    opacity: 0.6,
   },
 });

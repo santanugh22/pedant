@@ -27,11 +27,35 @@ export const api = {
   },
 
   // Competitions
-  getCompetitions: async (category?: string, page = 1, limit = 10) => {
+  getOverviewStats: async () => {
+    const res = await apiClient.get<ApiResponse<any>>('/competitions/stats/overview');
+    return res.data.data;
+  },
+  getCompetitions: async (
+    params: {
+      category?: string;
+      search?: string;
+      status?: string;
+      sortBy?: string;
+      page?: number;
+      limit?: number;
+    } | string = {},
+    page = 1,
+    limit = 10
+  ) => {
+    const queryParams =
+      typeof params === 'string'
+        ? { category: params, page, limit }
+        : { ...params, page: params.page || page, limit: params.limit || limit };
+
     const res = await apiClient.get<ApiResponse<any[]>>('/competitions', {
-      params: { category, page, limit },
+      params: queryParams,
     });
     return res.data;
+  },
+  createCompetition: async (data: any) => {
+    const res = await apiClient.post<ApiResponse<any>>('/competitions', data);
+    return res.data.data;
   },
   getCompetition: async (id: string) => {
     const res = await apiClient.get<ApiResponse<any>>(`/competitions/${id}`);

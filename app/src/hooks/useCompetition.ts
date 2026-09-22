@@ -11,10 +11,42 @@ export function useCompetition(id: string) {
   });
 }
 
-export function useCompetitions(category?: string, page = 1) {
+export function useOverviewStats() {
   return useQuery({
-    queryKey: ['competitions', category, page],
-    queryFn: () => api.getCompetitions(category, page),
+    queryKey: ['competition-overview-stats'],
+    queryFn: () => api.getOverviewStats(),
+    refetchOnWindowFocus: true,
+  });
+}
+
+export function useCompetitions(
+  params?:
+    | {
+        category?: string;
+        search?: string;
+        status?: string;
+        sortBy?: string;
+        page?: number;
+        limit?: number;
+      }
+    | string,
+  page = 1
+) {
+  const queryParams = typeof params === 'string' ? { category: params, page } : params;
+  return useQuery({
+    queryKey: ['competitions', queryParams],
+    queryFn: () => api.getCompetitions(queryParams),
+  });
+}
+
+export function useCreateCompetition() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: any) => api.createCompetition(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['competitions'] });
+      queryClient.invalidateQueries({ queryKey: ['competition-overview-stats'] });
+    },
   });
 }
 

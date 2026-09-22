@@ -12,13 +12,32 @@ export function formatCurrency(amount: number, currency = 'INR'): string {
   return `₹ ${formatted}`;
 }
 
-export function formatEventDate(isoDate: string | Date): { date: string; time: string } {
-  if (!isoDate) return { date: '', time: '' };
-  const d = dayjs(isoDate).tz('Asia/Kolkata');
-  return {
-    date: d.format('D MMM YY'), // e.g. 10 Aug 26
-    time: d.format('hh:mm A'),   // e.g. 11:50 PM
-  };
+export function formatEventDate(rawDate?: string | Date | number | null): { date: string; time: string } {
+  if (!rawDate) return { date: 'TBD', time: '--' };
+  try {
+    const d = typeof rawDate === 'string' || typeof rawDate === 'number' ? new Date(rawDate) : rawDate;
+    if (!(d instanceof Date) || isNaN(d.getTime())) {
+      return { date: 'TBD', time: '--' };
+    }
+    const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: '2-digit',
+      timeZone: 'Asia/Kolkata',
+    });
+    const timeFormatter = new Intl.DateTimeFormat('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata',
+    });
+    return {
+      date: dateFormatter.format(d),
+      time: timeFormatter.format(d).toUpperCase(),
+    };
+  } catch {
+    return { date: 'TBD', time: '--' };
+  }
 }
 
 export function padZero(num: number): string {

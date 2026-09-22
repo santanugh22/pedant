@@ -5,10 +5,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   ActivityIndicator,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, spacing, typography } from '../../constants/theme';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -64,7 +64,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({
             <VideoView
               style={styles.video}
               player={player}
-              allowsFullscreen
+              nativeControls
               allowsPictureInPicture
               startsPictureInPictureAutomatically={false}
             />

@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "seed": "tsc && node dist/src/seed/index.js",
+    "seed:large": "tsc && node dist/src/seed/index.js --large",
     "test": "jest --runInBand",
     "test:unit": "jest tests/unit --runInBand",
     "test:integration": "jest tests/integration --runInBand",

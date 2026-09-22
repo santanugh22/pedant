@@ -9,6 +9,7 @@ import { requireAuth, optionalAuth } from '../middlewares/auth';
 import { validate } from '../middlewares/validate';
 import {
   competitionQuerySchema,
+  createCompetitionSchema,
   presignSubmissionSchema,
   createSubmissionSchema,
 } from '../validators/competition.validator';
@@ -37,8 +38,14 @@ const upload = multer({
   limits: { fileSize: 200 * 1024 * 1024 }, // 200 MB limit
 });
 
-// Competitions list & details
+// Platform overview statistics (for Home screen)
+router.get('/stats/overview', compController.getOverviewStats);
+
+// Competitions list & create
 router.get('/', optionalAuth, validate(competitionQuerySchema, 'query'), compController.listCompetitions);
+router.post('/', validate(createCompetitionSchema), compController.createCompetition);
+
+// Competition details & sub-resources
 router.get('/:id', optionalAuth, compController.getCompetition);
 router.get('/:id/winners', compController.getWinners);
 router.get('/:id/testimonials', compController.getTestimonials);

@@ -1,14 +1,14 @@
-import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
+import axios from "axios";
+import { useAuthStore } from "../store/authStore";
 
 export const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:4000/api/v1';
+  process.env.EXPO_PUBLIC_API_BASE_URL || "http://192.168.31.163:4000/api/v1";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -45,7 +45,10 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      if (originalRequest.url?.includes('/auth/login') || originalRequest.url?.includes('/auth/refresh')) {
+      if (
+        originalRequest.url?.includes("/auth/login") ||
+        originalRequest.url?.includes("/auth/refresh")
+      ) {
         return Promise.reject(error);
       }
 
@@ -70,7 +73,9 @@ apiClient.interceptors.response.use(
       }
 
       try {
-        const res = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+        const res = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          refreshToken,
+        });
         const newAccessToken = res.data.data.accessToken;
         await useAuthStore.getState().updateAccessToken(newAccessToken);
 
@@ -89,5 +94,5 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );

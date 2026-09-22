@@ -18,10 +18,10 @@ interface ImportantDatesCardProps {
 export const ImportantDatesCard: React.FC<ImportantDatesCardProps> = ({ dates }) => {
   const { t } = useTranslation();
 
-  const regEnd = formatEventDate(dates.registrationEnd);
-  const subStart = formatEventDate(dates.submissionStart);
-  const subEnd = formatEventDate(dates.submissionEnd);
-  const resDate = formatEventDate(dates.resultDate);
+  const regEnd = formatEventDate(dates?.registrationEnd);
+  const subStart = formatEventDate(dates?.submissionStart);
+  const subEnd = formatEventDate(dates?.submissionEnd);
+  const resDate = formatEventDate(dates?.resultDate);
 
   return (
     <Card padding="lg" style={styles.card}>
