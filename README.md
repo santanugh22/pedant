@@ -1,4 +1,4 @@
-# 🏆 Feedants — Full-Stack Talent Competition Platform
+# — Full-Stack Talent Competition Platform
 ### React Native (Expo SDK 52) • Node.js / Express (TypeScript) • MongoDB (ACID Transactions) • Redis
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
